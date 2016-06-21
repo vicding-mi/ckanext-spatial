@@ -71,8 +71,7 @@ class SpatialMetadata(p.SingletonPlugin):
         from ckanext.spatial.model.package_extent import setup as setup_model
 
         if not p.toolkit.asbool(config.get('ckan.spatial.testing', 'False')):
-            print "*" * 100
-            print "Setting up the models"
+            log.debug('Setting up the spatial model')
             setup_model()
 
     def update_config(self, config):
@@ -190,7 +189,7 @@ class SpatialQuery(p.SingletonPlugin):
                 if not (geometry['type'] == 'Polygon'
                    and len(geometry['coordinates']) == 1
                    and len(geometry['coordinates'][0]) == 5):
-                    log.error('Solr backend only supports bboxes, ignoring geometry {0}'.format(pkg_dict['extras_spatial']))
+                    log.error('Solr backend only supports bboxes (Polygons with 5 points), ignoring geometry {0}'.format(pkg_dict['extras_spatial']))
                     return pkg_dict
 
                 coords = geometry['coordinates']
@@ -315,12 +314,12 @@ class SpatialQuery(p.SingletonPlugin):
         '''
         This will add an fq filter with the form:
 
-            +spatial_geom:"Intersects({minx} {miny} {maxx} {maxy})
+            +spatial_geom:"Intersects(ENVELOPE({minx}, {miny}, {maxx}, {maxy}))
 
         '''
         search_params['fq_list'] = search_params.get('fq_list', [])
-        search_params['fq_list'].append('+spatial_geom:"Intersects({minx} {miny} {maxx} {maxy})"'
-                                     .format(minx=bbox['minx'],miny=bbox['miny'],maxx=bbox['maxx'],maxy=bbox['maxy']))
+        search_params['fq_list'].append('+spatial_geom:"Intersects(ENVELOPE({minx}, {maxx}, {maxy}, {miny}))"'
+                                        .format(minx=bbox['minx'], miny=bbox['miny'], maxx=bbox['maxx'], maxy=bbox['maxy']))
 
         return search_params
 

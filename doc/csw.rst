@@ -64,8 +64,8 @@ Setup
 1. Install pycsw. There are several options for this, depending on your
    server setup, check the `pycsw documentation`_.
 
-   .. note:: CKAN integration requires at least pycsw version 1.8.0. Make sure
-             to install at least this version.
+   .. note:: CKAN integration requires least pycsw version 1.8.0. In general,
+             use the latest stable version.
 
    The following instructions assume that you have installed CKAN via a
    `package install`_ and should be run as root, but the steps are the same if
@@ -78,8 +78,8 @@ Setup
 
     git clone https://github.com/geopython/pycsw.git
     cd pycsw
-    # Remember to use at least pycsw 1.8.0
-    git checkout 1.8.0
+    # always use the latest stable version
+    git checkout 1.10.4
     pip install -e .
     python setup.py build
     python setup.py install
@@ -198,33 +198,6 @@ keep CKAN and pycsw in sync, and serve pycsw with Apache + mod_wsgi like CKAN.
       service apache2 restart
 
     pycsw should be now accessible at http://localhost/csw
-
-
-cswinfo
--------
-
-The command-line tool ``cswinfo`` allows to make queries on CSW servers and
-returns the info in nicely formatted JSON. This may be more convenient to type
-than using, for example, curl.
-
-Currently available queries are:
- * getcapabilities
- * getidentifiers
- * getrecords
- * getrecordbyid
-
-For details, type::
-
- cswinfo csw -h
-
-There are options for querying by only certain types, keywords and typenames
-as well as configuring the ElementSetName.
-
-The equivalent example to the one above for asking the capabilities is::
-
- cswinfo csw getcapabilities http://127.0.0.1:8000/
-
-OWSLib is the library used to actually perform the queries.
 
 .. _pycsw: http://pycsw.org 
 .. _pycsw documentation: http://docs.pycsw.org/en/latest/installation.html
